@@ -1,20 +1,18 @@
-import pygame, sys
+level_map = [
+    '                ',
+    'X X X     XXX X ',
+    'X X X    XXXXXX ',
+    'XXXXXXXXXXXXXXX ',
+    'XXXXXX  XXXXXXX ',
+    'XXXXXXXXXXXXXXX ',
+    'XX  XXXXXXXXXXX ',
+    'XXXXXXXXXXXXXXX ',
+    'XXXXXXXXXXXXXXX ',
+    'XXXXXXXXXXXXXXX ',
+    'XXXXXXXXXXXXXXX '
+]
 
-
-# Pygame setup
-pygame.init()
+tile_size = 64
 screen_width = 1200
-screen_height = 700
-screen = pygame.display.set_mode((screen_width, screen_height))
-clock = pygame.time.Clock()
-
-while True:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
-
-    screen.fill('black')
-
-    pygame.display.update()
-    clock.tick(60)
+screen_height = len(level_map) * tile_size
+print(screen_height)
