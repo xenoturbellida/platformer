@@ -13,6 +13,7 @@ class Player(pygame.sprite.Sprite):
         self.speed = 8
         self.gravity = 0.8
         self.jump_speed = -16
+        self.is_jump = False
 
     def get_input(self):
         keys = pygame.key.get_pressed()
@@ -32,8 +33,9 @@ class Player(pygame.sprite.Sprite):
         self.rect.y += self.direction.y
 
     def jump(self):
-        if self.direction.y == 0:
+        if not self.is_jump:
             self.direction.y = self.jump_speed
+            self.is_jump = True
 
     def update(self):
         self.get_input()
