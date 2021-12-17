@@ -1,7 +1,8 @@
 import pygame
-from tiles import Tile
-from player import Player
-from settings import tile_size, screen_width
+
+from src.tiles import Tile
+from src.player import Player
+from src.settings import tile_size, screen_width
 
 
 class Level:
@@ -9,6 +10,7 @@ class Level:
 
         # level setup
         self.display_surface = surface
+        self.level_data = level_data
         self.setup_level(level_data)
 
         self.world_shift = 0
@@ -68,6 +70,14 @@ class Level:
                     player.rect.top = sprite.rect.bottom
                     player.direction.y = 0
 
+    def player_death(self):
+        player = self.player.sprite
+
+        if player.rect.bottom > 1500:
+            self.setup_level(self.level_data)
+            pygame.time.wait(500)
+
+
     def run(self):
 
         # level tiles
@@ -79,5 +89,7 @@ class Level:
         self.player.update()
         self.horizontal_movement_collisions()
         self.vertical_movement_collision()
+        self.player_death()
         self.player.draw(self.display_surface)
+
 

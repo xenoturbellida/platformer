@@ -32,7 +32,8 @@ class Player(pygame.sprite.Sprite):
         self.rect.y += self.direction.y
 
     def jump(self):
-        self.direction.y = self.jump_speed
+        if self.direction.y == 0:
+            self.direction.y = self.jump_speed
 
     def update(self):
         self.get_input()

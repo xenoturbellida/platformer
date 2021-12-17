@@ -1,7 +1,8 @@
 import pygame
 import sys
-from settings import *
-from level import Level
+
+from src.settings import *
+from src.level import Level
 
 
 # Pygame setup
