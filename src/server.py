@@ -1,5 +1,4 @@
 import socket
-import time
 
 host = 'localhost'
 port = 5555
@@ -43,5 +42,3 @@ while True:
             players_sockets.remove(sock)
             sock.close()
             print('Unconect')
-
-    time.sleep(1)

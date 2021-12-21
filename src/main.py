@@ -1,21 +1,48 @@
-import pygame
+import socket
 import sys
 
-from src.settings import *
-from src.level import Level
+import pygame
+
+from settings import *
+from level import Level
+
+
+# connecting to the server
+host = 'localhost'
+port = 5555
+
+client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+client_socket.connect((host, port))
 
 
 # Pygame setup
 pygame.init()
 screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption('Platformer')
 clock = pygame.time.Clock()
 level = Level(level_map, screen)
 
+
 while True:
+    # read commands
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+
+    keys = pygame.key.get_pressed()
+    print(keys)
+
+    # send a command to the server
+    client_socket.send('To left'.encode())
+
+    # we get a new state of the field from the server
+    data = client_socket.recv(2**20)
+    data = data.decode()
+
+    # drawing a new field state
+    print(data)
 
     screen.fill('black')
     level.run()

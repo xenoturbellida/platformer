@@ -1,8 +1,8 @@
 import pygame
 
-from src.tiles import Tile
-from src.player import Player
-from src.settings import tile_size, screen_width
+from tiles import Tile
+from player import Player
+from settings import tile_size, screen_width
 
 
 class Level:
