@@ -44,8 +44,8 @@ while True:
     # drawing a new field state
     print(data)
 
-    screen.fill('black')
-    level.run()
-
-    pygame.display.update()
-    clock.tick(60)
+    # screen.fill('black')
+    # level.run([])
+    #
+    # pygame.display.update()
+    clock.tick(fps)
