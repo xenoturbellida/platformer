@@ -7,6 +7,7 @@ from settings import tile_size, screen_width
 
 class Level:
     def __init__(self, level_data, surface):
+
         # level setup
         self.display_surface = surface
         self.level_data = level_data
@@ -16,7 +17,8 @@ class Level:
 
     def setup_level(self, layout):
         self.tiles = pygame.sprite.Group()
-        self.players = pygame.sprite.Group()
+        self.player1 = pygame.sprite.GroupSingle()
+        self.player2 = pygame.sprite.GroupSingle()
         for row_index, row in enumerate(layout):
             for col_index, cell in enumerate(row):
 
@@ -26,32 +28,35 @@ class Level:
                 if cell == 'X':
                     tile = Tile(pos=(x, y), size=tile_size)
                     self.tiles.add(tile)
-                # if cell == '1':
-                #     player_sprite = Player(pos=(x, y))
-                #     self.player.add(player_sprite)
-                # if cell == '2':
-                #     player_sprite = Player(pos=(x, y))
-                #     self.player.add(player_sprite)
+                if cell == '1':
+                    player_sprite1 = Player(pos=(x, y), color='red')
+                    self.player1.add(player_sprite1)
+                if cell == '2':
+                    player_sprite2 = Player(pos=(x, y), color='green')
+                    self.player2.add(player_sprite2)
 
     def scroll_x(self):
-        for player in self.players:
-        # player = self.player.sprite
-            player_x = player.rect.centerx
-            direction_x = player.direction.x
+        player1 = self.player1.sprite
+        player2 = self.player2.sprite
+        player_x = player1.rect.centerx
+        direction_x = player1.direction.x
 
-            if player_x < screen_width/4 and direction_x < 0:
-                self.world_shift = 8
-                player.speed = 0
-            elif player_x > screen_width - screen_width/4 and direction_x > 0:
-                self.world_shift = -8
-                player.speed = 0
-            else:
-                self.world_shift = 0
-                player.speed = 8
+        if player_x < screen_width/4 and direction_x < 0:
+            self.world_shift = 8
+            player1.speed = 0
+            # player2.speed = 0
+        elif player_x > screen_width - screen_width/4 and direction_x > 0:
+            self.world_shift = -8
+            player1.speed = 0
+            # player2.speed = 0
+        else:
+            self.world_shift = 0
+            player1.speed = 8
+            # player2.speed = 8
 
     def horizontal_movement_collisions(self):
-        for player in self.players:
-        # player = self.player.sprite
+        for player in [self.player1.sprite, self.player2.sprite]:
+            # player = self.player.sprite
             player.rect.x += player.direction.x * player.speed
 
             for sprite in self.tiles.sprites():
@@ -62,8 +67,8 @@ class Level:
                         player.rect.right = sprite.rect.left
 
     def vertical_movement_collision(self):
-        for player in self.players:
-        # player = self.player.sprite
+        for player in [self.player1.sprite, self.player2.sprite]:
+            # player = self.player.sprite
             player.apply_gravity()
 
             for sprite in self.tiles.sprites():
@@ -76,20 +81,15 @@ class Level:
                         player.rect.top = sprite.rect.bottom
                         player.direction.y = 0
 
-    def player_fall(self):
-        for player in self.players:
-        # player = self.player.sprite
-
+    def player_death(self):
+        for player in [self.player1.sprite, self.player2.sprite]:
+            # player = self.player.sprite
             if player.rect.bottom > 1500:
                 self.setup_level(self.level_data)
                 pygame.time.wait(500)
 
 
-    def run(self, players):
-        # self.players = players
-        # print(self.players)
-        for player in players:
-            self.players.add(player)
+    def run(self, keys_pl1, keys_pl2):
 
         # level tiles
         self.tiles.update(self.world_shift)
@@ -97,11 +97,15 @@ class Level:
         self.scroll_x()
 
         # player
-        for player in self.players:
-            player.update()
-            self.horizontal_movement_collisions()
-            self.vertical_movement_collision()
-            self.player_fall()
-        self.players.draw(self.display_surface)
+        # self.player.update()
+        # self.player1.sprite.update_player1()
+        # self.player2.sprite.update_player2(self.world_shift)
+        self.player1.update(1, keys_pl1, self.world_shift)
+        self.player2.update(2, keys_pl2, self.world_shift)
+        self.horizontal_movement_collisions()
+        self.vertical_movement_collision()
+        self.player_death()
+        self.player1.draw(self.display_surface)
+        self.player2.draw(self.display_surface)
 
 

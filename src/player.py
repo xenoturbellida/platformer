@@ -2,10 +2,10 @@ import pygame
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos):
+    def __init__(self, pos, color):
         super().__init__()
         self.image = pygame.Surface((32, 64))
-        self.image.fill('red')
+        self.image.fill(color)
         self.rect = self.image.get_rect(topleft=pos)
 
         # player movement
@@ -28,6 +28,48 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_SPACE]:
             self.jump()
 
+    def get_input_player1(self):
+        keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_RIGHT]:
+            self.direction.x = 1
+        elif keys[pygame.K_LEFT]:
+            self.direction.x = -1
+        else:
+            self.direction.x = 0
+
+        if keys[pygame.K_UP]:
+            self.jump()
+
+    def get_input_player2(self, x_shift):
+        keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_d]:
+            self.direction.x = 1
+        elif keys[pygame.K_a]:
+            self.direction.x = -1
+        else:
+            self.direction.x = 0
+
+        if keys[pygame.K_w]:
+            self.jump()
+
+        self.rect.x += x_shift
+
+    def set_directions(self, player_no, keys, x_shift):
+        if keys['right']:
+            self.direction.x = 1
+        elif keys['left']:
+            self.direction.x = -1
+        else:
+            self.direction.x = 0
+
+        if keys['jump']:
+            self.jump()
+
+        if player_no == 2:
+            self.rect.x += x_shift
+
     def apply_gravity(self):
         self.direction.y += self.gravity
         self.rect.y += self.direction.y
@@ -37,7 +79,17 @@ class Player(pygame.sprite.Sprite):
             self.direction.y = self.jump_speed
             self.is_jump = True
 
-    def update(self):
+    def update_old(self):
         self.get_input()
+
+    def update_player1(self):
+        self.get_input_player1()
+
+    def update_player2(self, x_shift):
+        self.get_input_player2(x_shift)
+
+    def update(self, player_no, keys, x_shift):
+        self.set_directions(player_no, keys, x_shift)
+
 
 

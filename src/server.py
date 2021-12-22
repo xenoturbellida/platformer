@@ -1,46 +1,46 @@
 import socket
-import sys
-
-import pygame
-from settings import *
-
-from src.level import Level
-from src.player import Player
-from src.settings import start_position_player_1
+import time
 
 host = 'localhost'
 port = 5555
 
-# create socket
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 server_socket.bind((host, port))
-server_socket.setblocking(0)
-server_socket.listen(2)
+# server_socket.setblocking(False)
+server_socket.listen(5)
+print('Create server socket')
 
-# create server window
-pygame.init()
-screen = pygame.display.set_mode((screen_width, screen_height))
-clock = pygame.time.Clock()
-level = Level(level_map, screen)
 
 players_sockets = []
-players = []
-while True:
-    # connecting new players
+# connecting new players
+while len(players_sockets) != 2:
     try:
         new_socket, addr = server_socket.accept()
-        new_socket.setblocking(0)
+        print(addr)
+        # new_socket.setblocking(False)
         players_sockets.append(new_socket)
-        print(len(players))
-        if len(players) <= 2:
-            new_player = Player(start_position_player_1)
-            players.append(new_player)
-            print('Connect ', new_player)
+        print('Connect ', addr)
+        player_no = '1' if len(players_sockets) == 1 else '2'
+        new_socket.send(player_no.encode('ascii'))
     except:
-        pass
-        # print('Not new socket')
+        print('There is no new socket')
 
+
+error = False
+while not error:
+    for i in range(2):
+        try:
+            data = players_sockets[i].recv(2**20)
+            players_sockets[(i + 1) % 2].send(data)
+            if i == 0:
+                print(f'player {i} with data {data}')
+        except socket.error as e:
+            print(f'disconnection with error {e}')
+            players_sockets[i].close()
+            error = True
+
+    """        
     # data received from the player
     for sock in players_sockets:
         try:
@@ -48,8 +48,7 @@ while True:
             data = data.decode()
             print('Get ', data)
         except:
-            pass
-            # print('Nothing')
+            print('Nothing')
 
     # click processing
 
@@ -61,15 +60,4 @@ while True:
             players_sockets.remove(sock)
             sock.close()
             print('Unconect')
-
-    # server window
-    clock.tick(fps)
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
-
-    screen.fill('black')
-    level.run(players)
-
-    pygame.display.update()
+    """
