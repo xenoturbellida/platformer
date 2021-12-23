@@ -89,7 +89,7 @@ class Level:
                 pygame.time.wait(500)
 
 
-    def run(self, keys_pl1, keys_pl2):
+    def run(self, keys_pl):
 
         # level tiles
         self.tiles.update(self.world_shift)
@@ -98,10 +98,10 @@ class Level:
 
         # player
         # self.player.update()
-        # self.player1.sprite.update_player1()
-        # self.player2.sprite.update_player2(self.world_shift)
-        self.player1.update(1, keys_pl1, self.world_shift)
-        self.player2.update(2, keys_pl2, self.world_shift)
+        self.player1.update(1, keys_pl, self.world_shift)
+        self.player2.update(2, keys_pl, self.world_shift)
+        # self.player1.update_player1(keys_pl1)
+        # self.player2.update_player2(keys_pl2, self.world_shift)
         self.horizontal_movement_collisions()
         self.vertical_movement_collision()
         self.player_death()

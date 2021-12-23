@@ -28,30 +28,51 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_SPACE]:
             self.jump()
 
-    def get_input_player1(self):
-        keys = pygame.key.get_pressed()
-
-        if keys[pygame.K_RIGHT]:
+    def get_input_player1(self, keys):
+        # keys = pygame.key.get_pressed()
+        #
+        # if keys[pygame.K_RIGHT]:
+        #     self.direction.x = 1
+        # elif keys[pygame.K_LEFT]:
+        #     self.direction.x = -1
+        # else:
+        #     self.direction.x = 0
+        #
+        # if keys[pygame.K_UP]:
+        #     self.jump()
+        if keys['right']:
             self.direction.x = 1
-        elif keys[pygame.K_LEFT]:
+        elif keys['left']:
             self.direction.x = -1
         else:
             self.direction.x = 0
 
-        if keys[pygame.K_UP]:
+        if keys['jump']:
             self.jump()
 
-    def get_input_player2(self, x_shift):
-        keys = pygame.key.get_pressed()
+    def get_input_player2(self, keys, x_shift):
+        # keys = pygame.key.get_pressed()
+        #
+        # if keys[pygame.K_d]:
+        #     self.direction.x = 1
+        # elif keys[pygame.K_a]:
+        #     self.direction.x = -1
+        # else:
+        #     self.direction.x = 0
+        #
+        # if keys[pygame.K_w]:
+        #     self.jump()
+        #
+        # self.rect.x += x_shift
 
-        if keys[pygame.K_d]:
+        if keys['right2']:
             self.direction.x = 1
-        elif keys[pygame.K_a]:
+        elif keys['left2']:
             self.direction.x = -1
         else:
             self.direction.x = 0
 
-        if keys[pygame.K_w]:
+        if keys['jump2']:
             self.jump()
 
         self.rect.x += x_shift
@@ -82,14 +103,18 @@ class Player(pygame.sprite.Sprite):
     def update_old(self):
         self.get_input()
 
-    def update_player1(self):
-        self.get_input_player1()
+    def update_player1(self, keys):
+        self.get_input_player1(keys)
 
-    def update_player2(self, x_shift):
-        self.get_input_player2(x_shift)
+    def update_player2(self, keys, x_shift):
+        self.get_input_player2(keys, x_shift)
 
     def update(self, player_no, keys, x_shift):
-        self.set_directions(player_no, keys, x_shift)
+        if player_no == 1:
+            self.get_input_player1(keys)
+        else:
+            self.get_input_player2(keys, x_shift)
+        # self.set_directions(player_no, keys, x_shift)
 
 
 

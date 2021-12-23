@@ -33,7 +33,10 @@ def keys_to_dict(keys):
     commands = {
         'right': keys[pygame.K_RIGHT],
         'left': keys[pygame.K_LEFT],
-        'jump': keys[pygame.K_UP]
+        'jump': keys[pygame.K_UP],
+        'right2': keys[pygame.K_d],
+        'left2': keys[pygame.K_a],
+        'jump2': keys[pygame.K_w]
     }
     return commands
 
@@ -58,9 +61,7 @@ while True:
     # keys = pygame.key.get_pressed()
 
     # send a command to the server
-    keys_dict = (keys_to_dict(pygame.key.get_pressed())
-                 if player_no == 1
-                 else keys_to_dict_pl2(pygame.key.get_pressed()))
+    keys_dict = (keys_to_dict(pygame.key.get_pressed()))
     keys_to_send = json.dumps(keys_dict).encode('ascii')
     # print(keys_to_send, '   size   ', len(keys_to_send))
 
@@ -80,10 +81,11 @@ while True:
         print('pressed left, player_no', player_no)
 
     screen.fill('black')
-    if player_no == 1:
-        level.run(keys_dict, teammate_keys)
-    else:
-        level.run(teammate_keys, keys_dict)
+    # if player_no == 1:
+    #     level.run(keys_dict, teammate_keys)
+    # else:
+    #     level.run(teammate_keys, keys_dict)
+    level.run(keys_dict)
     # level.run()
 
     pygame.display.update()
