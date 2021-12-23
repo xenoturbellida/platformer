@@ -11,6 +11,17 @@ from level import Level
 host = 'localhost'
 port = 5555
 
+management_1 = {
+            'right': pygame.K_RIGHT,
+            'left': pygame.K_LEFT,
+            'jump': pygame.K_UP
+        }
+management_2 = {
+        'right': pygame.K_d,
+        'left': pygame.K_a,
+        'jump': pygame.K_w
+    }
+
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 client_socket.connect((host, port))

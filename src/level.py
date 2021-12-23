@@ -26,12 +26,12 @@ class Level:
                 if cell == 'X':
                     tile = Tile(pos=(x, y), size=tile_size)
                     self.tiles.add(tile)
-                # if cell == '1':
-                #     player_sprite = Player(pos=(x, y))
-                #     self.player.add(player_sprite)
-                # if cell == '2':
-                #     player_sprite = Player(pos=(x, y))
-                #     self.player.add(player_sprite)
+                if cell == '1':
+                    player_sprite = Player(pos=(x, y))
+                    self.player.add(player_sprite)
+                if cell == '2':
+                    player_sprite = Player(pos=(x, y))
+                    self.player.add(player_sprite)
 
     def scroll_x(self):
         for player in self.players:
@@ -89,7 +89,7 @@ class Level:
         # self.players = players
         # print(self.players)
         for player in players:
-            self.players.add(player)
+            self.players.conect = player
 
         # level tiles
         self.tiles.update(self.world_shift)

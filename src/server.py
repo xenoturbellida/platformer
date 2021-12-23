@@ -26,7 +26,23 @@ level = Level(level_map, screen)
 
 players_sockets = []
 players = []
+while len(players) != 2:
+    # connecting new players
+    try:
+        new_socket, addr = server_socket.accept()
+        new_socket.setblocking(0)
+        players_sockets.append(new_socket)
+        print(len(players_sockets))
+        # if len(players) <= 2:
+        #     new_player = Player(start_position_player_1)
+        #     players.append(new_player)
+        #     print('Connect ', new_player)
+    except:
+        pass
+
+
 while True:
+    """
     # connecting new players
     try:
         new_socket, addr = server_socket.accept()
@@ -40,6 +56,7 @@ while True:
     except:
         pass
         # print('Not new socket')
+    """
 
     # data received from the player
     for sock in players_sockets:
