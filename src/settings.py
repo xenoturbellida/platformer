@@ -1,3 +1,4 @@
+# obsolete level data
 level_map = [
     '      XXX               ',
     '          P X           ',
@@ -12,6 +13,8 @@ level_map = [
     'XXXXXXXXXXXXXXX         '
 ]
 
+vertical_tile_number = 11
 tile_size = 64
+screen_height = vertical_tile_number * tile_size
 screen_width = 1200
-screen_height = len(level_map) * tile_size
+sky_color = '#140842'
