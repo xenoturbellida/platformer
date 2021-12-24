@@ -13,6 +13,7 @@ class Player(pygame.sprite.Sprite):
         self.connect = None
         self.management = None
         self.player_on_ground = False
+        # self.check_players_collisions = check_players_collisions
 
         # dust particles
         self.import_dust_run_particles()

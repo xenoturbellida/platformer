@@ -28,7 +28,8 @@ class Level:
         self.player1 = pygame.sprite.GroupSingle()
         self.player2 = pygame.sprite.GroupSingle()
         self.goal = pygame.sprite.GroupSingle()
-        self.player_setup(player_layout, player_layout2)
+        # self.player_setup(player_layout, player_layout2)
+        self.players = self.player_setup(player_layout, player_layout2)
 
         # terrain setup
         terrain_layout = import_csv_layout(level_data['terrain'])
@@ -72,6 +73,8 @@ class Level:
         return sprite_group
 
     def player_setup(self, layout, layout2):
+        players = pygame.sprite.Group()
+
         for row_index, row in enumerate(layout):
             for col_index, val in enumerate(row):
                 x = col_index * tile_size
@@ -79,6 +82,7 @@ class Level:
                 if val == '0':
                     sprite = Player((x, y), self.display_surface, self.create_jump_particles)
                     self.player1.add(sprite)
+                    players.add(sprite)
                 if val == '1':
                     hat_surface = pygame.image.load('../graphics/character/hat.png')
                     sprite = StaticTile(tile_size, x, y, hat_surface)
@@ -91,6 +95,9 @@ class Level:
                 if val == '0':
                     sprite = Player((x, y), self.display_surface, self.create_jump_particles)
                     self.player2.add(sprite)
+                    players.add(sprite)
+
+        return players
 
     def create_jump_particles(self, pos):
         if self.player1.sprite.facing_right:
@@ -225,6 +232,20 @@ class Level:
                 for star in collided_stars:
                     self.change_stars(star.value)
 
+    def check_players_collisions(self):
+        for player in [self.player1.sprite, self.player2.sprite]:
+            teammates_collisions = pygame.sprite.spritecollide(player, self.players, False)
+            if teammates_collisions:
+                for teammate in teammates_collisions:
+                    teammate_center = teammate.rect.centery
+                    teammate_top = teammate.rect.top
+                    player_bottom = player.rect.bottom
+                    if teammate_top < player_bottom < teammate_center and player.direction.y >= 0:
+                        player.rect.bottom = teammate_top
+                        player.direction.y = 0
+                        player.on_ground = True
+                        player.is_jump = False
+
     def run(self, keys_pl):
         # run the entire game / level
         self.display_surface.fill(sky_color)
@@ -259,3 +280,4 @@ class Level:
         self.check_win()
 
         self.check_star_collisions()
+        self.check_players_collisions()
