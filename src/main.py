@@ -8,6 +8,7 @@ from settings import *
 from level import Level
 from game_data import level_0
 from overworld import Overworld
+from ui import UI
 
 
 class Game:
@@ -16,8 +17,11 @@ class Game:
         self.overworld = Overworld(0, self.max_level, screen, self.create_level)
         self.status = 'overworld'
 
+        self.stars = 0
+        self.ui = UI(screen)
+
     def create_level(self, current_level):
-        self.level = Level(current_level, screen, self.create_overworld)
+        self.level = Level(current_level, screen, self.create_overworld, self.change_stars)
         self.status = 'level'
 
     def create_overworld(self, current_level, new_max_level):
@@ -26,11 +30,15 @@ class Game:
         self.overworld = Overworld(current_level, self.max_level, screen, self.create_level)
         self.status = 'overworld'
 
+    def change_stars(self, amount):
+        self.stars += amount
+
     def run(self, keys_dict):
         if self.status == 'overworld':
             self.overworld.run()
         else:
             self.level.run(keys_dict)
+            self.ui.show_coins(self.stars)
 
 # connecting to the server
 host = 'localhost'

@@ -9,7 +9,7 @@ from game_data import levels
 
 
 class Level:
-    def __init__(self, current_level, surface, create_overworld):
+    def __init__(self, current_level, surface, create_overworld, change_stars):
         # general setup
         self.display_surface = surface
         self.world_shift = 0
@@ -33,6 +33,9 @@ class Level:
         # terrain setup
         terrain_layout = import_csv_layout(level_data['terrain'])
         self.terrain_sprites = self.create_tile_group(terrain_layout, 'terrain')
+
+        # user interface
+        self.change_stars = change_stars
 
         # stars
         star_layout = import_csv_layout(level_data['stars'])
@@ -59,11 +62,11 @@ class Level:
 
                     if type == 'stars':
                         if val == '0':
-                            sprite = AnimatedTile(tile_size, x, y, '../graphics/stars/blue')
-                            # sprite = Star(tile_size, x, y, '../graphics/stars/blue')
+                            # sprite = AnimatedTile(tile_size, x, y, '../graphics/stars/blue')
+                            sprite = Star(tile_size, x, y, '../graphics/stars/blue', 1)
                         if val == '1':
-                            sprite = AnimatedTile(tile_size, x, y, '../graphics/stars/pink')
-                            # sprite = Star(tile_size, x, y, '../graphics/stars/pink')
+                            # sprite = AnimatedTile(tile_size, x, y, '../graphics/stars/pink')
+                            sprite = Star(tile_size, x, y, '../graphics/stars/pink', 5)
                     sprite_group.add(sprite)
 
         return sprite_group
@@ -75,7 +78,7 @@ class Level:
                 y = row_index * tile_size
                 if val == '0':
                     sprite = Player((x, y), self.display_surface, self.create_jump_particles)
-                    self.player2.add(sprite)
+                    self.player1.add(sprite)
                 if val == '1':
                     hat_surface = pygame.image.load('../graphics/character/hat.png')
                     sprite = StaticTile(tile_size, x, y, hat_surface)
@@ -206,12 +209,21 @@ class Level:
             self.create_overworld(self.current_level, 0)
 
     def check_death(self):
-        if self.player.sprite.rect.top > screen_height:
-            self.create_overworld(self.current_level, 0)
+        for player in [self.player1.sprite, self.player2.sprite]:
+            if player.rect.top > screen_height:
+                self.create_overworld(self.current_level, 0)
 
     def check_win(self):
-        if pygame.sprite.spritecollide(self.player.sprite, self.goal, False):
-            self.create_overworld(self.current_level, self.new_max_level)
+        for player in [self.player1.sprite, self.player2.sprite]:
+            if pygame.sprite.spritecollide(player, self.goal, False):
+                self.create_overworld(self.current_level, self.new_max_level)
+
+    def check_star_collisions(self):
+        for player in [self.player1.sprite, self.player2.sprite]:
+            collided_stars = pygame.sprite.spritecollide(player, self.star_sprites, True)
+            if collided_stars:
+                for star in collided_stars:
+                    self.change_stars(star.value)
 
     def run(self, keys_pl):
         # run the entire game / level
@@ -245,3 +257,5 @@ class Level:
 
         self.check_death()
         self.check_win()
+
+        self.check_star_collisions()

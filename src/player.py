@@ -150,6 +150,8 @@ class Player(pygame.sprite.Sprite):
     def jump(self):
         if not self.is_jump:
             self.direction.y = self.jump_speed
+            self.rect.y += self.direction.y
+
             self.is_jump = True
 
     def update(self, player_no, keys, x_shift):
