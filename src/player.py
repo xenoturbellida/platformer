@@ -5,13 +5,9 @@ from support import import_folder
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos, surface, create_jump_particles):
         super().__init__()
-        # self.import_character_assets()
         self.animations = {'idle': [], 'run': [], 'jump': [], 'fall': []}
         self.frame_index = 0
         self.animation_speed = 0.15
-        # self.image = pygame.Surface((32, 64))
-        # self.image.fill('red')
-        # self.image = self.animations['idle'][self.frame_index]
         self.image = pygame.Surface((32, 64))
         self.rect = self.image.get_rect(topleft=pos)
         self.connect = None
@@ -40,12 +36,8 @@ class Player(pygame.sprite.Sprite):
         self.on_left = False
         self.on_right = False
 
-    def start_image(self):
-        path = '../graphics/character/player1/'
-
     def import_character_assets1(self):
         character_path = '../graphics/character/player1/'
-        # self.animations = {'idle': [], 'run': [], 'jump': [], 'fall': []}
 
         for animation in self.animations.keys():
             full_path = character_path + animation
@@ -61,7 +53,6 @@ class Player(pygame.sprite.Sprite):
 
     def import_dust_run_particles(self):
         self.dust_run_particles = import_folder('../graphics/character/dust_particles/run')
-        # print(len(self.dust_run_particles))
 
     def animate(self):
         animation = self.animations[self.status]
@@ -97,8 +88,6 @@ class Player(pygame.sprite.Sprite):
             self.rect = self.image.get_rect(center=self.rect.center)
 
     def run_dust_animation(self):
-        print('run')
-        print(self.on_ground)
         if self.status == 'run' and self.on_ground:
             self.dust_frame_index += self.dust_animation_speed
             if self.dust_frame_index >= len(self.dust_run_particles):
@@ -113,34 +102,7 @@ class Player(pygame.sprite.Sprite):
                     flipped_dust_particle = pygame.transform.flip(dust_particle, True, False)
                     self.display_surface.blit(flipped_dust_particle, pos)
 
-    # def get_input(self):
-    #     keys = pygame.key.get_pressed()
-    #
-    #     if keys[pygame.K_RIGHT]:
-    #         self.direction.x = 1
-    #         self.facing_right = True
-    #     elif keys[pygame.K_LEFT]:
-    #         self.direction.x = -1
-    #         self.facing_right = False
-    #     else:
-    #         self.direction.x = 0
-    #
-    #     if keys[pygame.K_SPACE] and self.on_ground:
-    #         self.jump()
-    #         self.create_jump_particles(self.rect.midbottom)
-
     def get_input_player1(self, keys):
-        # keys = pygame.key.get_pressed()
-        #
-        # if keys[pygame.K_RIGHT]:
-        #     self.direction.x = 1
-        # elif keys[pygame.K_LEFT]:
-        #     self.direction.x = -1
-        # else:
-        #     self.direction.x = 0
-        #
-        # if keys[pygame.K_UP]:
-        #     self.jump()
         if keys['right']:
             self.direction.x = 1
             self.facing_right = True
@@ -155,20 +117,6 @@ class Player(pygame.sprite.Sprite):
             self.create_jump_particles(self.rect.midbottom)
 
     def get_input_player2(self, keys, x_shift):
-        # keys = pygame.key.get_pressed()
-        #
-        # if keys[pygame.K_d]:
-        #     self.direction.x = 1
-        # elif keys[pygame.K_a]:
-        #     self.direction.x = -1
-        # else:
-        #     self.direction.x = 0
-        #
-        # if keys[pygame.K_w]:
-        #     self.jump()
-        #
-        # self.rect.x += x_shift
-
         if keys['right2']:
             self.direction.x = 1
             self.facing_right = True

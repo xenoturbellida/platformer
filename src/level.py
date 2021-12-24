@@ -18,8 +18,6 @@ class Level:
 
         # dust
         self.dust_sprite = pygame.sprite.GroupSingle()
-        # self.player_on_ground = False
-        # self.player_on_ground2 = False
 
     def create_jump_particles(self, pos):
         if self.player1.sprite.facing_right:
@@ -73,18 +71,15 @@ class Level:
         if player_x < screen_width / 4 and direction_x < 0:
             self.world_shift = 8
             player1.speed = 0
-            # player2.speed = 0
         elif player_x > screen_width - screen_width / 4 and direction_x > 0:
             self.world_shift = -8
             player1.speed = 0
-            # player2.speed = 0
         else:
             self.world_shift = 0
             player1.speed = 8
 
     def horizontal_movement_collisions(self):
         for player in [self.player1.sprite, self.player2.sprite]:
-            # player = self.player.sprite
             player.rect.x += player.direction.x * player.speed
 
             for sprite in self.tiles.sprites():
@@ -105,7 +100,6 @@ class Level:
 
     def vertical_movement_collision(self):
         for player in [self.player1.sprite, self.player2.sprite]:
-            # player = self.player.sprite
             player.apply_gravity()
 
             for sprite in self.tiles.sprites():
@@ -129,7 +123,6 @@ class Level:
 
     def player_fall(self):
         for player in [self.player1.sprite, self.player2.sprite]:
-            # player = self.player.sprite
             if player.rect.bottom > 1500:
                 self.setup_level(self.level_data)
                 pygame.time.wait(500)
@@ -147,11 +140,8 @@ class Level:
         self.scroll_x()
 
         # player
-        # self.player.update()
         self.player1.update(1, keys_pl, self.world_shift)
         self.player2.update(2, keys_pl, self.world_shift)
-        # self.player1.update_player1(keys_pl1)
-        # self.player2.update_player2(keys_pl2, self.world_shift)
         self.horizontal_movement_collisions()
         self.vertical_movement_collision()
         self.player_fall()
