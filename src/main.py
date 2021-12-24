@@ -22,10 +22,11 @@ management_2 = {
         'jump': pygame.K_w
     }
 
+"""
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 client_socket.connect((host, port))
-
+"""
 
 # Pygame setup
 pygame.init()
@@ -45,6 +46,7 @@ while True:
     keys = pygame.key.get_pressed()
     print(keys)
 
+    """
     # send a command to the server
     client_socket.send('To left'.encode())
 
@@ -54,9 +56,10 @@ while True:
 
     # drawing a new field state
     print(data)
+    """
 
-    # screen.fill('black')
-    # level.run([])
-    #
-    # pygame.display.update()
-    clock.tick(fps)
+    screen.fill('black')
+    level.run()
+
+    pygame.display.update()
+    clock.tick(60)
