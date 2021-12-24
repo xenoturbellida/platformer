@@ -37,14 +37,14 @@ class Player(pygame.sprite.Sprite):
         self.on_right = False
 
     def import_character_assets1(self):
-        character_path = '../graphics/character/player1/'
+        character_path = '../graphics/character/'
 
         for animation in self.animations.keys():
             full_path = character_path + animation
             self.animations[animation] = import_folder(full_path)
 
     def import_character_assets2(self):
-        character_path = '../graphics/character/player2/'
+        character_path = '../graphics/character2/'
         self.animations = {'idle': [], 'run': [], 'jump': [], 'fall': []}
 
         for animation in self.animations.keys():

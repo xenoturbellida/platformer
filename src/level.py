@@ -17,10 +17,11 @@ class Level:
 
         # player
         player_layout = import_csv_layout((level_data['player']))
+        player_layout2 = import_csv_layout((level_data['player2']))
         self.player1 = pygame.sprite.GroupSingle()
         self.player2 = pygame.sprite.GroupSingle()
         self.goal = pygame.sprite.GroupSingle()
-        self.player_setup(player_layout)
+        self.player_setup(player_layout, player_layout2)
 
         # terrain setup
         terrain_layout = import_csv_layout(level_data['terrain'])
@@ -60,7 +61,7 @@ class Level:
 
         return sprite_group
 
-    def player_setup(self, layout):
+    def player_setup(self, layout, layout2):
         for row_index, row in enumerate(layout):
             for col_index, val in enumerate(row):
                 x = col_index * tile_size
@@ -68,22 +69,20 @@ class Level:
                 if val == '0':
                     sprite = Player((x, y), self.display_surface, self.create_jump_particles)
                     self.player1.add(sprite)
-                if val == '1':
-                    hat_surface = pygame.image.load('../graphics/character/hat.png')
-                    sprite = StaticTile(tile_size, x, y, hat_surface)
-                    self.goal.add(sprite)
-
-        for row_index, row in enumerate(layout):
-            for col_index, val in enumerate(row):
-                x = col_index * tile_size
-                y = row_index * tile_size
-                if val == '0':
                     sprite = Player((x, y), self.display_surface, self.create_jump_particles)
                     self.player2.add(sprite)
                 if val == '1':
                     hat_surface = pygame.image.load('../graphics/character/hat.png')
                     sprite = StaticTile(tile_size, x, y, hat_surface)
                     self.goal.add(sprite)
+
+        for row_index, row in enumerate(layout2):
+            for col_index, val in enumerate(row):
+                x = col_index * tile_size
+                y = row_index * tile_size
+                if val == '0':
+                    sprite = Player((x, y), self.display_surface, self.create_jump_particles)
+                    self.player2.add(sprite)
 
     def create_jump_particles(self, pos):
         if self.player1.sprite.facing_right:

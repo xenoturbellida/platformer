@@ -33,6 +33,11 @@ player_no = int(client_socket.recv(256).decode('ascii'))
 print('player_no: ', player_no)
 
 
+class Game:
+    def __init__(self):
+        self.stars = 0
+
+
 # Pygame setup
 pygame.init()
 screen = pygame.display.set_mode((screen_width, screen_height))
