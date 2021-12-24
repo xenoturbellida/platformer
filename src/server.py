@@ -5,8 +5,8 @@ import pygame
 from settings import *
 
 from src.level import Level
-from src.player import Player
-from src.settings import start_position_player_1
+# from src.player import Player
+# from src.settings import start_position_player_1
 
 host = 'localhost'
 port = 5555
@@ -19,29 +19,39 @@ server_socket.setblocking(0)
 server_socket.listen(2)
 
 # create server window
-pygame.init()
-screen = pygame.display.set_mode((screen_width, screen_height))
-clock = pygame.time.Clock()
-level = Level(level_map, screen)
+# pygame.init()
+# screen = pygame.display.set_mode((screen_width, screen_height))
+# clock = pygame.time.Clock()
+# level = Level(level_map, screen)
 
 players_sockets = []
-players = []
-while len(players) != 2:
+# players = []
+# connecting new players
+while len(players_sockets) != 2:
     # connecting new players
     try:
         new_socket, addr = server_socket.accept()
-        new_socket.setblocking(0)
+        print(addr)
+        # new_socket.setblocking(False)
         players_sockets.append(new_socket)
-        print(len(players_sockets))
-        # if len(players) <= 2:
-        #     new_player = Player(start_position_player_1)
-        #     players.append(new_player)
-        #     print('Connect ', new_player)
+        print('Connect ', addr)
+        player_no = '1' if len(players_sockets) == 1 else '2'
+        new_socket.send(player_no.encode('ascii'))
     except:
         pass
 
 
 while True:
+    for i in range(2):
+        try:
+            data = players_sockets[i].recv(2 ** 20)
+            players_sockets[(i + 1) % 2].send(data)
+            if i == 0:
+                print(f'player {i} with data {data}')
+        except socket.error as e:
+            print(f'disconnection with error {e}')
+            players_sockets[i].close()
+            error = True
     """
     # connecting new players
     try:
@@ -59,34 +69,34 @@ while True:
     """
 
     # data received from the player
-    for sock in players_sockets:
-        try:
-            data = sock.recv(1024)
-            data = data.decode()
-            print('Get ', data)
-        except:
-            pass
-            # print('Nothing')
+    # for sock in players_sockets:
+    #     try:
+    #         data = sock.recv(1024)
+    #         data = data.decode()
+    #         print('Get ', data)
+    #     except:
+    #         pass
+    #         # print('Nothing')
 
     # click processing
 
     # sending a new field state
-    for sock in players_sockets:
-        try:
-            sock.send('New field state'.encode())
-        except:
-            players_sockets.remove(sock)
-            sock.close()
-            print('Unconect')
+    # for sock in players_sockets:
+    #     try:
+    #         sock.send('New field state'.encode())
+    #     except:
+    #         players_sockets.remove(sock)
+    #         sock.close()
+    #         print('Unconect')
 
     # server window
-    clock.tick(fps)
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
-
-    screen.fill('black')
-    level.run(players)
-
-    pygame.display.update()
+    # clock.tick(fps)
+    # for event in pygame.event.get():
+    #     if event.type == pygame.QUIT:
+    #         pygame.quit()
+    #         sys.exit()
+    #
+    # screen.fill('black')
+    # level.run(players)
+    #
+    # pygame.display.update()

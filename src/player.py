@@ -14,6 +14,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft=pos)
         self.connect = None
         self.management = None
+        self.player_on_ground = False
 
         # dust particles
         self.import_dust_run_particles()
@@ -83,6 +84,8 @@ class Player(pygame.sprite.Sprite):
             self.rect = self.image.get_rect(center=self.rect.center)
 
     def run_dust_animation(self):
+        print('run')
+        print(self.on_ground)
         if self.status == 'run' and self.on_ground:
             self.dust_frame_index += self.dust_animation_speed
             if self.dust_frame_index >= len(self.dust_run_particles):
@@ -97,21 +100,76 @@ class Player(pygame.sprite.Sprite):
                     flipped_dust_particle = pygame.transform.flip(dust_particle, True, False)
                     self.display_surface.blit(flipped_dust_particle, pos)
 
-    def get_input(self):
-        keys = pygame.key.get_pressed()
+    # def get_input(self):
+    #     keys = pygame.key.get_pressed()
+    #
+    #     if keys[pygame.K_RIGHT]:
+    #         self.direction.x = 1
+    #         self.facing_right = True
+    #     elif keys[pygame.K_LEFT]:
+    #         self.direction.x = -1
+    #         self.facing_right = False
+    #     else:
+    #         self.direction.x = 0
+    #
+    #     if keys[pygame.K_SPACE] and self.on_ground:
+    #         self.jump()
+    #         self.create_jump_particles(self.rect.midbottom)
 
-        if keys[pygame.K_RIGHT]:
+    def get_input_player1(self, keys):
+        # keys = pygame.key.get_pressed()
+        #
+        # if keys[pygame.K_RIGHT]:
+        #     self.direction.x = 1
+        # elif keys[pygame.K_LEFT]:
+        #     self.direction.x = -1
+        # else:
+        #     self.direction.x = 0
+        #
+        # if keys[pygame.K_UP]:
+        #     self.jump()
+        if keys['right']:
             self.direction.x = 1
             self.facing_right = True
-        elif keys[pygame.K_LEFT]:
+        elif keys['left']:
             self.direction.x = -1
             self.facing_right = False
         else:
             self.direction.x = 0
 
-        if keys[pygame.K_SPACE] and self.on_ground:
+        if keys['jump'] and self.on_ground:
             self.jump()
             self.create_jump_particles(self.rect.midbottom)
+
+    def get_input_player2(self, keys, x_shift):
+        # keys = pygame.key.get_pressed()
+        #
+        # if keys[pygame.K_d]:
+        #     self.direction.x = 1
+        # elif keys[pygame.K_a]:
+        #     self.direction.x = -1
+        # else:
+        #     self.direction.x = 0
+        #
+        # if keys[pygame.K_w]:
+        #     self.jump()
+        #
+        # self.rect.x += x_shift
+
+        if keys['right2']:
+            self.direction.x = 1
+            self.facing_right = True
+        elif keys['left2']:
+            self.direction.x = -1
+            self.facing_right = False
+        else:
+            self.direction.x = 0
+
+        if keys['jump2'] and self.on_ground:
+            self.jump()
+            self.create_jump_particles(self.rect.midbottom)
+
+        self.rect.x += x_shift
 
     def get_status(self):
         if self.direction.y < 0:
@@ -129,15 +187,15 @@ class Player(pygame.sprite.Sprite):
         self.rect.y += self.direction.y
 
     def jump(self):
-        # if not self.is_jump:
-        #     self.direction.y = self.jump_speed
-        #     self.is_jump = True
-        self.direction.y = self.jump_speed
+        if not self.is_jump:
+            self.direction.y = self.jump_speed
+            self.is_jump = True
 
-    def update(self):
-        self.get_input()
+    def update(self, player_no, keys, x_shift):
+        if player_no == 1:
+            self.get_input_player1(keys)
+        else:
+            self.get_input_player2(keys, x_shift)
         self.get_status()
         self.animate()
         self.run_dust_animation()
-
-
