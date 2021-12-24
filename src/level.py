@@ -2,18 +2,25 @@ import pygame
 
 from tiles import Tile, StaticTile, AnimatedTile, Star
 from player import Player
-from settings import tile_size, screen_width
+from settings import tile_size, screen_width, screen_height, sky_color
 from particles import ParticleEffect
 from support import import_csv_layout, import_cut_graphics
+from game_data import levels
 
 
 class Level:
-    def __init__(self, level_data, surface):
+    def __init__(self, current_level, surface, create_overworld):
         # general setup
         self.display_surface = surface
         self.world_shift = 0
         self.current_x = 0
-        self.level_data = level_data
+        self.level_data = current_level
+
+        # overworld connection
+        self.create_overworld = create_overworld
+        self.current_level = current_level
+        level_data = levels[self.current_level]
+        self.new_max_level = level_data['unlock']
 
         # player
         player_layout = import_csv_layout((level_data['player']))
@@ -67,8 +74,6 @@ class Level:
                 x = col_index * tile_size
                 y = row_index * tile_size
                 if val == '0':
-                    sprite = Player((x, y), self.display_surface, self.create_jump_particles)
-                    self.player1.add(sprite)
                     sprite = Player((x, y), self.display_surface, self.create_jump_particles)
                     self.player2.add(sprite)
                 if val == '1':
@@ -193,8 +198,24 @@ class Level:
                 self.setup_level(self.level_data)
                 pygame.time.wait(500)
 
+    def input(self):
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_RETURN]:
+            self.create_overworld(self.current_level, self.new_max_level)
+        if keys[pygame.K_ESCAPE]:
+            self.create_overworld(self.current_level, 0)
+
+    def check_death(self):
+        if self.player.sprite.rect.top > screen_height:
+            self.create_overworld(self.current_level, 0)
+
+    def check_win(self):
+        if pygame.sprite.spritecollide(self.player.sprite, self.goal, False):
+            self.create_overworld(self.current_level, self.new_max_level)
+
     def run(self, keys_pl):
         # run the entire game / level
+        self.display_surface.fill(sky_color)
 
         self.terrain_sprites.update(self.world_shift)
         self.terrain_sprites.draw(self.display_surface)
@@ -210,7 +231,7 @@ class Level:
         # player sprites
         self.player1.update(1, keys_pl, self.world_shift)
         self.player2.update(2, keys_pl, self.world_shift)
-        self.player_fall()
+        # self.player_fall()
         self.horizontal_movement_collisions()
         self.vertical_movement_collision()
         for player in [self.player1.sprite, self.player2.sprite]:
@@ -221,3 +242,6 @@ class Level:
         self.player2.draw(self.display_surface)
         self.goal.update(self.world_shift)
         self.goal.draw(self.display_surface)
+
+        self.check_death()
+        self.check_win()

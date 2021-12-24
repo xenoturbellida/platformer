@@ -25,7 +25,7 @@ class Player(pygame.sprite.Sprite):
         self.direction = pygame.math.Vector2(0, 0)
         self.speed = 8
         self.gravity = 0.8
-        self.jump_speed = -16
+        self.jump_speed = -19
         self.is_jump = False
 
         # player status
@@ -103,30 +103,30 @@ class Player(pygame.sprite.Sprite):
                     self.display_surface.blit(flipped_dust_particle, pos)
 
     def get_input_player1(self, keys):
-        if keys['right']:
+        if keys[pygame.K_RIGHT]:
             self.direction.x = 1
             self.facing_right = True
-        elif keys['left']:
+        elif keys[pygame.K_LEFT]:
             self.direction.x = -1
             self.facing_right = False
         else:
             self.direction.x = 0
 
-        if keys['jump'] and self.on_ground:
+        if keys[pygame.K_UP] and self.on_ground:
             self.jump()
             self.create_jump_particles(self.rect.midbottom)
 
     def get_input_player2(self, keys, x_shift):
-        if keys['right2']:
+        if keys[pygame.K_d]:
             self.direction.x = 1
             self.facing_right = True
-        elif keys['left2']:
+        elif keys[pygame.K_a]:
             self.direction.x = -1
             self.facing_right = False
         else:
             self.direction.x = 0
 
-        if keys['jump2'] and self.on_ground:
+        if keys[pygame.K_w] and self.on_ground:
             self.jump()
             self.create_jump_particles(self.rect.midbottom)
 
