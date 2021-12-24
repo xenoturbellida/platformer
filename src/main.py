@@ -6,6 +6,7 @@ import pygame
 
 from settings import *
 from level import Level
+from game_data import level_0
 
 
 # connecting to the server
@@ -37,7 +38,7 @@ pygame.init()
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('Platformer')
 clock = pygame.time.Clock()
-level = Level(level_map, screen)
+level = Level(level_0, screen)
 
 
 while True:
@@ -64,8 +65,8 @@ while True:
     print(data)
     """
 
-    screen.fill('black')
+    screen.fill(sky_color)
     level.run(keys_dict)
 
     pygame.display.update()
-    clock.tick(60)
+    clock.tick(fps)
