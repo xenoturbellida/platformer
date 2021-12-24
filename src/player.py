@@ -24,7 +24,7 @@ class Player(pygame.sprite.Sprite):
         self.direction = pygame.math.Vector2(0, 0)
         self.speed = 8
         self.gravity = 0.8
-        self.jump_speed = -16
+        self.jump_speed = -19
         self.is_jump = False
 
         # player status
@@ -137,5 +137,3 @@ class Player(pygame.sprite.Sprite):
         self.get_status()
         self.animate()
         self.run_dust_animation()
-
-
