@@ -5,12 +5,14 @@ from support import import_folder
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos, surface, create_jump_particles):
         super().__init__()
-        self.import_character_assets()
+        # self.import_character_assets()
+        self.animations = {'idle': [], 'run': [], 'jump': [], 'fall': []}
         self.frame_index = 0
         self.animation_speed = 0.15
         # self.image = pygame.Surface((32, 64))
         # self.image.fill('red')
-        self.image = self.animations['idle'][self.frame_index]
+        # self.image = self.animations['idle'][self.frame_index]
+        self.image = pygame.Surface((32, 64))
         self.rect = self.image.get_rect(topleft=pos)
         self.connect = None
         self.management = None
@@ -38,8 +40,19 @@ class Player(pygame.sprite.Sprite):
         self.on_left = False
         self.on_right = False
 
-    def import_character_assets(self):
-        character_path = '../graphics/character/'
+    def start_image(self):
+        path = '../graphics/character/player1/'
+
+    def import_character_assets1(self):
+        character_path = '../graphics/character/player1/'
+        # self.animations = {'idle': [], 'run': [], 'jump': [], 'fall': []}
+
+        for animation in self.animations.keys():
+            full_path = character_path + animation
+            self.animations[animation] = import_folder(full_path)
+
+    def import_character_assets2(self):
+        character_path = '../graphics/character/player2/'
         self.animations = {'idle': [], 'run': [], 'jump': [], 'fall': []}
 
         for animation in self.animations.keys():
@@ -48,7 +61,7 @@ class Player(pygame.sprite.Sprite):
 
     def import_dust_run_particles(self):
         self.dust_run_particles = import_folder('../graphics/character/dust_particles/run')
-        print(len(self.dust_run_particles))
+        # print(len(self.dust_run_particles))
 
     def animate(self):
         animation = self.animations[self.status]
@@ -193,8 +206,10 @@ class Player(pygame.sprite.Sprite):
 
     def update(self, player_no, keys, x_shift):
         if player_no == 1:
+            self.import_character_assets1()
             self.get_input_player1(keys)
         else:
+            self.import_character_assets2()
             self.get_input_player2(keys, x_shift)
         self.get_status()
         self.animate()
