@@ -1,6 +1,6 @@
 import pygame
 from game_data import levels
-from src.support import import_folder
+from support import import_folder
 
 
 class Node(pygame.sprite.Sprite):
@@ -8,7 +8,6 @@ class Node(pygame.sprite.Sprite):
         super().__init__()
         self.frames = import_folder(path)
         self.frame_index = 0
-        print(self.frames)
         self.image = self.frames[self.frame_index]
         if status == 'available':
             self.status = 'available'
@@ -72,7 +71,6 @@ class Overworld:
         self.nodes = pygame.sprite.Group()
 
         for index, node_data in enumerate(levels.values()):
-            print(node_data)
             if index <= self.max_level:
                 node_sprite = Node(
                     node_data['node_pos'],
