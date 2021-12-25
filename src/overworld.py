@@ -96,8 +96,8 @@ class Overworld:
         icon_sprite = Icon(self.nodes.sprites()[self.current_level].rect.center)
         self.icon.add(icon_sprite)
 
-    def input(self):
-        keys = pygame.key.get_pressed()
+    def input(self, keys):
+        # keys = pygame.key.get_pressed()
 
         if not self.moving:
             if keys[pygame.K_RIGHT] and self.current_level < self.max_level:
@@ -128,9 +128,9 @@ class Overworld:
                 self.moving = False
                 self.move_direction = pygame.math.Vector2(0, 0)
 
-    def run(self):
+    def run(self, keys):
         self.display_surface.fill('white')
-        self.input()
+        self.input(keys)
         self.update_icon_pos()
         self.icon.update()
         self.nodes.update()

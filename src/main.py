@@ -37,7 +37,7 @@ class Game:
 
     def run(self, keys_dict):
         if self.status == 'overworld':
-            self.overworld.run()
+            self.overworld.run(keys_dict)
         else:
             self.level.run(keys_dict)
             self.ui.show_coins(self.stars)
@@ -70,12 +70,13 @@ while True:
             pygame.quit()
             sys.exit()
 
-    keys_dict = []
+    keys_dict = ()
     try:
         keys_dict = pygame.key.get_pressed()
         keys_to_send = json.dumps(keys_dict).encode('ascii')
 
         client_socket.send(keys_to_send)
+        client_socket.send(screen)
     except:
         client_socket.close()
 
@@ -83,6 +84,7 @@ while True:
     try:
         data = client_socket.recv(2 ** 20)
         data = data.decode()
+        screen = client_socket.recv(2 ** 20)
         game.run(data)
     except:
         client_socket.close()
