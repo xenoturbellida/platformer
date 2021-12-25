@@ -6,7 +6,7 @@ class UI:
         self.display_surface = surface
 
         # coins
-        self.star = pygame.image.load('../graphics/stars/pink/pink_1.png')
+        self.star = pygame.image.load('../graphics/stars/pink/pink_1.png').convert_alpha()
         self.star_rect = self.star.get_rect(topleft=(30, 30))
         self.font = pygame.font.SysFont('Comic Sans MS', 25)
 

@@ -9,7 +9,7 @@ from game_data import levels
 
 
 class Level:
-    def __init__(self, current_level, surface, create_overworld, change_stars):
+    def __init__(self, current_level, surface, create_overworld, change_stars, check_game_over):
         # general setup
         self.display_surface = surface
         self.world_shift = 0
@@ -41,6 +41,8 @@ class Level:
         # stars
         star_layout = import_csv_layout(level_data['stars'])
         self.star_sprites = self.create_tile_group(star_layout, 'stars')
+        self.local_stars = 0
+        self.check_game_over = check_game_over
 
         # dust
         self.dust_sprite = pygame.sprite.GroupSingle()
@@ -218,6 +220,7 @@ class Level:
     def check_death(self):
         for player in [self.player1.sprite, self.player2.sprite]:
             if player.rect.top > screen_height:
+                self.check_game_over(self.local_stars)
                 self.create_overworld(self.current_level, 0)
 
     def check_win(self):
@@ -231,6 +234,7 @@ class Level:
             if collided_stars:
                 for star in collided_stars:
                     self.change_stars(star.value)
+                    self.local_stars += star.value
 
     def check_players_collisions(self):
         for player in [self.player1.sprite, self.player2.sprite]:
