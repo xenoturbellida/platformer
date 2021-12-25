@@ -6,7 +6,6 @@ import pygame
 
 from settings import *
 from level import Level
-from game_data import level_0
 from overworld import Overworld
 from ui import UI
 
@@ -43,21 +42,10 @@ class Game:
             self.level.run(keys_dict)
             self.ui.show_coins(self.stars)
 
+
 # connecting to the server
 host = 'localhost'
 port = 5555
-
-
-# def keys_to_dict(keys):
-#     commands = {
-#         'right': keys[pygame.K_RIGHT],
-#         'left': keys[pygame.K_LEFT],
-#         'jump': keys[pygame.K_UP],
-#         'right2': keys[pygame.K_d],
-#         'left2': keys[pygame.K_a],
-#         'jump2': keys[pygame.K_w]
-#     }
-#     return commands
 
 
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -74,30 +62,32 @@ pygame.display.set_caption('Platformer')
 clock = pygame.time.Clock()
 game = Game()
 
+
 while True:
-    # read commands
+    # read commands and send a command to server
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
 
-    # keys_dict = (keys_to_dict(pygame.key.get_pressed()))
-    keys_dict = pygame.key.get_pressed()
-    keys_to_send = json.dumps(keys_dict).encode('ascii')
+    keys_dict = []
+    try:
+        keys_dict = pygame.key.get_pressed()
+        keys_to_send = json.dumps(keys_dict).encode('ascii')
 
-    client_socket.send(keys_to_send)
-
-    """
-    # send a command to the server
-    client_socket.send('To left'.encode())
+        client_socket.send(keys_to_send)
+    except:
+        client_socket.close()
 
     # we get a new state of the field from the server
-    data = client_socket.recv(2**20)
-    data = data.decode()
+    try:
+        data = client_socket.recv(2 ** 20)
+        data = data.decode()
+        game.run(data)
+    except:
+        client_socket.close()
 
     # drawing a new field state
-    print(data)
-    """
 
     game.run(keys_dict)
 

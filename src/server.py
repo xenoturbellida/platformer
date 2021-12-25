@@ -1,5 +1,6 @@
 import socket
 
+import pygame
 from settings import *
 
 
@@ -19,7 +20,6 @@ players_sockets = []
 while len(players_sockets) != 2:
     try:
         new_socket, addr = server_socket.accept()
-        print(addr)
         # new_socket.setblocking(False)
         players_sockets.append(new_socket)
         print('Connect ', addr)
@@ -29,13 +29,23 @@ while len(players_sockets) != 2:
         print('There is no new socket')
 
 
-while True:
+# pygame.init()
+# screen = pygame.display.set_mode((screen_width, screen_height))
+# pygame.display.set_caption('Platformer')
+# clock = pygame.time.Clock()
+# game = Game()
+
+
+error = False
+while not error:
     for i in range(2):
         try:
             data = players_sockets[i].recv(2 ** 20)
+            # print(data)
             players_sockets[(i + 1) % 2].send(data)
-            if i == 0:
-                print(f'player {i} with data {data}')
+            # if i == 0:
+            #     print(f'player {i} with data {data}')
+            # game.run(data)
         except socket.error as e:
             print(f'disconnection with error {e}')
             players_sockets[i].close()
