@@ -29,10 +29,10 @@ while len(players_sockets) != 2:
         print('There is no new socket')
 
 
-# pygame.init()
-# screen = pygame.display.set_mode((screen_width, screen_height))
-# pygame.display.set_caption('Platformer')
-# clock = pygame.time.Clock()
+pygame.init()
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption('Platformer')
+clock = pygame.time.Clock()
 # game = Game()
 
 
@@ -43,6 +43,8 @@ while not error:
             data = players_sockets[i].recv(2 ** 20)
             # print(data)
             players_sockets[(i + 1) % 2].send(data)
+            screen = players_sockets[i].recv(2 ** 20)
+            players_sockets[(i + 1) % 2].send(screen)
             # if i == 0:
             #     print(f'player {i} with data {data}')
             # game.run(data)
@@ -50,6 +52,9 @@ while not error:
             print(f'disconnection with error {e}')
             players_sockets[i].close()
             error = True
+
+    pygame.display.update()
+    clock.tick(fps)
 
     # sending a new field state
     # for sock in players_sockets:
