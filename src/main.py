@@ -21,7 +21,7 @@ class Game:
         self.ui = UI(screen)
 
     def create_level(self, current_level):
-        self.level = Level(current_level, screen, self.create_overworld, self.change_stars)
+        self.level = Level(current_level, screen, self.create_overworld, self.change_stars, self.check_game_over)
         self.status = 'level'
 
     def create_overworld(self, current_level, new_max_level):
@@ -32,6 +32,9 @@ class Game:
 
     def change_stars(self, amount):
         self.stars += amount
+
+    def check_game_over(self, amount):
+        self.stars -= amount
 
     def run(self, keys_dict):
         if self.status == 'overworld':
